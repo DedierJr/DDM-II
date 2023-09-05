@@ -1,10 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { StyleSheet, Text, Button, View } from "react-native";
+import { StyleSheet, Text, Button, View, TextInput } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export default function App() {
   const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
+  const [formattedDate, setFormattedDate] = useState("");
 
   const showPicker = () => {
     setIsDateTimePickerVisible(true);
@@ -15,7 +16,14 @@ export default function App() {
   };
 
   const confirmaPicker = (date) => {
-    alert("Valor Escolhido", date);
+    const formattedDate =
+      date.getDate().toString().padStart(2, "0") +
+      "/" +
+      (date.getMonth() + 1).toString().padStart(2, "0") +
+      "/" +
+      date.getFullYear();
+    setFormattedDate(formattedDate); // Define o estado para a data formatada
+    alert("Valor Escolhido\n\n" + formattedDate);
     hidePicker();
   };
 
@@ -29,6 +37,8 @@ export default function App() {
         onConfirm={confirmaPicker}
         onCancel={hidePicker}
       ></DateTimePickerModal>
+      <Text>Data escolhida: {formattedDate}</Text>
+      <TextInput>Data escolhida: {formattedDate}</TextInput>
       <StatusBar style="auto" />
     </View>
   );
