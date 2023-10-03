@@ -1,8 +1,8 @@
 export class Papagaio {
     public id : string;
     public nome : string;
-    public sexo: string;
-    public idioma: string;
+    public sexo: string; //tamanho
+    public idioma: string; //nome_cientifico
     public raca : string;
     
     constructor(obj?: Partial<Papagaio>) {
