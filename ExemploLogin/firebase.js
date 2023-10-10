@@ -12,20 +12,19 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
 // Your web app's Firebase configuration
-
 const firebaseConfig = {
 
-  apiKey: "AIzaSyCzsdbQZ3Hkv_KRbHbu72SgMTHnwjSA8yQ",
+  apiKey: "AIzaSyCM2FntufV-0uPPXvGv_jJwOMCRswFPbP8",
 
-  authDomain: "arvore-8def1.firebaseapp.com",
+  authDomain: "exemplologin-e6c6c.firebaseapp.com",
 
-  projectId: "arvore-8def1",
+  projectId: "exemplologin-e6c6c",
 
-  storageBucket: "arvore-8def1.appspot.com",
+  storageBucket: "exemplologin-e6c6c.appspot.com",
 
-  messagingSenderId: "888320792684",
+  messagingSenderId: "141301266003",
 
-  appId: "1:888320792684:web:6385bf78034032011ae049"
+  appId: "1:141301266003:web:5a357f7dc3401b1c9f38a6"
 
 };
 

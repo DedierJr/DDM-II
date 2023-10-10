@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "avaliacao_DedierJr",
-    "slug": "avaliacao_DedierJr",
+    "name": "ExemploLogin",
+    "slug": "ExemploLogin",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
