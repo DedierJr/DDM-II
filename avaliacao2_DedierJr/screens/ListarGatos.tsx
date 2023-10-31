@@ -36,7 +36,7 @@
       <Text style={MeuEstilo.title}>Data de Nascimento: {item.data_nasc}</Text>  
       <Text style={MeuEstilo.title}>Raça: {item.raca}</Text>
       <Text style={MeuEstilo.title}>Sexo: {item.sexo}</Text>
-      <Text style={MeuEstilo.title}>Comida Favorita: {item.raca}</Text>      
+      <Text style={MeuEstilo.title}>Comida Favorita: {item.comida_fav}</Text>      
     </View>
   );
 
