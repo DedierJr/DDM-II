@@ -6,10 +6,13 @@ import { useNavigation } from '@react-navigation/native';
 import { firestore } from '../firebase.js';
 import { Marcador } from '../model/Marcador';
 import meuestilo from '../meuestilo.js';
+import DetalhesMarcador from './DetalhesMarcador'; // Importe o componente DetalhesMarcador
+
 
 const Mapa = () => {
     const [formMarcador, setFormMarcador] = useState<Partial<Marcador>>({});
     const [marcadores, setMarcadores] = useState<Marcador[]>([]);
+    const [marcadorSelecionado, setMarcadorSelecionado] = useState<string | null>(null);
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -59,11 +62,25 @@ const Mapa = () => {
         longitudeDelta: 0.0421
     });
 
-    return (
-        <View style={MeuEstilo.container}>
-            <MapView style={MeuEstilo.map}
-                region={position}
-                onPress={e => {
+    const renderContent = () => {
+        if (marcadorSelecionado) {
+            return (
+                <DetalhesMarcador
+                    marcador={marcadores.find(m => m.id === marcadorSelecionado)}
+                />
+            );
+        }
+
+        return (
+            <MapView
+                style={MeuEstilo.map}
+                region={{
+                    latitude: position.latitude,
+                    longitude: position.longitude,
+                    latitudeDelta: position.latitudeDelta,
+                    longitudeDelta: position.longitudeDelta
+                }}
+                onPress={(e) => {
                     setPosition({
                         latitude: e.nativeEvent.coordinate.latitude,
                         longitude: e.nativeEvent.coordinate.longitude,
@@ -83,9 +100,16 @@ const Mapa = () => {
                         coordinate={{ latitude: marcador.lat, longitude: marcador.long }}
                         title={marcador.titulo}
                         description={marcador.descricao}
+                        onPress={() => setMarcadorSelecionado(marcador.id)}
                     />
                 ))}
             </MapView>
+        );
+    };
+
+    return (
+        <View style={MeuEstilo.container}>
+            {renderContent()}
 
             <Text>Latitude : {position.latitude}</Text>
             <Text>Longitude : {position.longitude}</Text>
