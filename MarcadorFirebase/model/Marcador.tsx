@@ -34,9 +34,11 @@ export class Marcador {
     }
 
     async salvar() {
+        const batch = firestore.batch();
         const marcadorRefComId = firestore.collection('Marcador').doc();
         this.id = marcadorRefComId.id;
-        await marcadorRefComId.set(this.toFirestore());
+        batch.set(marcadorRefComId, this.toFirestore());
+        await batch.commit();
     }
 
     toString() {

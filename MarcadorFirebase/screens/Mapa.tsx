@@ -4,13 +4,28 @@ import MapView, { Marker } from 'react-native-maps';
 import MeuEstilo from '../estiloMapa.js';
 import { useNavigation } from '@react-navigation/native';
 import { firestore } from '../firebase.js';
-import { Marcador } from '../model/Marcador.tsx';
+import { Marcador } from '../model/Marcador';
 import meuestilo from '../meuestilo.js';
 
 const Mapa = () => {
     const [formMarcador, setFormMarcador] = useState<Partial<Marcador>>({});
-    const marcadorRef = firestore.collection('Marcador');
+    const [marcadores, setMarcadores] = useState<Marcador[]>([]);
     const navigation = useNavigation();
+
+    useEffect(() => {
+        const unsubscribe = firestore.collection('Marcador').onSnapshot((snapshot) => {
+            const novosMarcadores: Marcador[] = [];
+            snapshot.forEach((doc) => {
+                novosMarcadores.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+            });
+            setMarcadores(novosMarcadores);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const limparFormulario = () => {
         setFormMarcador({
@@ -27,10 +42,10 @@ const Mapa = () => {
 
     const salvar = async () => {
         const marcador = new Marcador({
-            lat: formMarcador.lat || 0,
-            long: formMarcador.long || 0,
-            titulo: formMarcador.titulo || '',
-            descricao: formMarcador.descricao || ''
+            lat: formMarcador.lat,
+            long: formMarcador.long,
+            titulo: formMarcador.titulo,
+            descricao: formMarcador.descricao
         });
         await marcador.salvar();
         alert("Marcador adicionado com sucesso");
@@ -43,29 +58,34 @@ const Mapa = () => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
     });
-    const [title, setTitle] = useState("");
-    const [descricao, setDescricao] = useState("");
 
     return (
         <View style={MeuEstilo.container}>
             <MapView style={MeuEstilo.map}
                 region={position}
-                onPress={e => setPosition({
-                    ...position,
-                    latitude: e.nativeEvent.coordinate.latitude,
-                    longitude: e.nativeEvent.coordinate.longitude,
-                    latitudeDelta: e.nativeEvent.coordinate.latitudeDelta,
-                    longitudeDelta: e.nativeEvent.coordinate.longitudeDelta
-                })}
+                onPress={e => {
+                    setPosition({
+                        latitude: e.nativeEvent.coordinate.latitude,
+                        longitude: e.nativeEvent.coordinate.longitude,
+                        latitudeDelta: position.latitudeDelta,
+                        longitudeDelta: position.longitudeDelta
+                    });
+                    setFormMarcador({
+                        ...formMarcador,
+                        lat: e.nativeEvent.coordinate.latitude,
+                        long: e.nativeEvent.coordinate.longitude
+                    });
+                }}
             >
-
-                <Marker
-                    coordinate={position}
-                    title={title}
-                    description={descricao}
-                />
+                {marcadores.map((marcador) => (
+                    <Marker
+                        key={marcador.id}
+                        coordinate={{ latitude: marcador.lat, longitude: marcador.long }}
+                        title={marcador.titulo}
+                        description={marcador.descricao}
+                    />
+                ))}
             </MapView>
-
 
             <Text>Latitude : {position.latitude}</Text>
             <Text>Longitude : {position.longitude}</Text>
