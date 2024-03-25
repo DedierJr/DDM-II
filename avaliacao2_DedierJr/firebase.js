@@ -17,19 +17,20 @@ import "firebase/compat/firestore";
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyCVw09xExfq-OZkyRXMfj73Sm2Ywd3nbrU",
+  apiKey: "AIzaSyD44x5c2t7xx62zq54qBwi2v5CErgvzHgo",
 
-  authDomain: "avaliacao2-223a9.firebaseapp.com",
+  authDomain: "marcador2-48487.firebaseapp.com",
 
-  projectId: "avaliacao2-223a9",
+  projectId: "marcador2-48487",
 
-  storageBucket: "avaliacao2-223a9.appspot.com",
+  storageBucket: "marcador2-48487.appspot.com",
 
-  messagingSenderId: "899699251175",
+  messagingSenderId: "257845476576",
 
-  appId: "1:899699251175:web:89a68f9f7544b6221c8f42"
+  appId: "1:257845476576:web:339b3375c86ca7aa206485"
 
 };
+
 
 
 // Initialize Firebase

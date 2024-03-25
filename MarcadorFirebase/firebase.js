@@ -12,19 +12,23 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
 // Your web app's Firebase configuration
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCYKT-UQCCc25pIcWNLLdafcC3wZPguh-E",
 
-  authDomain: "marcador-a47bd.firebaseapp.com",
+  apiKey: "AIzaSyD44x5c2t7xx62zq54qBwi2v5CErgvzHgo",
 
-  projectId: "marcador-a47bd",
+  authDomain: "marcador2-48487.firebaseapp.com",
 
-  storageBucket: "marcador-a47bd.appspot.com",
+  projectId: "marcador2-48487",
 
-  messagingSenderId: "284113017168",
+  storageBucket: "marcador2-48487.appspot.com",
 
-  appId: "1:284113017168:web:235e740d41aed808b2b455",
+  messagingSenderId: "257845476576",
+
+  appId: "1:257845476576:web:339b3375c86ca7aa206485"
+
 };
+
 
 // Initialize Firebase
 let app;

@@ -1,40 +1,51 @@
+import { firestore } from '../firebase.js';
+
 export class Marcador {
-    public id : string;
-    public lat : number;
+    public id: string;
+    public lat: number;
     public long: number;
     public titulo: string;
-    public descricao : string;
+    public descricao: string;
     
     constructor(obj?: Partial<Marcador>) {
         if (obj) {
-            this.id = obj.id
-            this.lat = obj.lat
-            this.long = obj.long
-            this.titulo = obj.titulo
-            this.descricao = obj.descricao
-         }
+            this.id = obj.id || '';
+            this.lat = obj.lat || 0;
+            this.long = obj.long || 0;
+            this.titulo = obj.titulo || '';
+            this.descricao = obj.descricao || '';
+        } else {
+            this.id = '';
+            this.lat = 0;
+            this.long = 0;
+            this.titulo = '';
+            this.descricao = '';
+        }
     }
 
     toFirestore() {
-        const papagaio =  {
-                    id : this.id,
-                    lat : this.lat,
-                    long : this.long,
-                    titulo : this.titulo,
-                    descricao : this.descricao
-         }
-         return papagaio
+        return {
+            id: this.id,
+            lat: this.lat,
+            long: this.long,
+            titulo: this.titulo,
+            descricao: this.descricao
+        };
     }
 
-   
+    async salvar() {
+        const marcadorRefComId = firestore.collection('Marcador').doc();
+        this.id = marcadorRefComId.id;
+        await marcadorRefComId.set(this.toFirestore());
+    }
+
     toString() {
-        const Objeto = `{
+        return `{
             "id": "${this.id}",
             "lat": "${this.lat}",
             "long": "${this.long}",
             "titulo": "${this.titulo}",
-            "descricao": "${this.descricao}"  
-        }`
-        return Objeto
+            "descricao": "${this.descricao}"
+        }`;
     }
-};
+}
