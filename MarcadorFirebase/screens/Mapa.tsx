@@ -1,3 +1,4 @@
+// Mapa.tsx
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
@@ -8,11 +9,17 @@ import { Marcador } from '../model/Marcador';
 import meuestilo from '../meuestilo.js';
 import DetalhesMarcador from './DetalhesMarcador'; // Importe o componente DetalhesMarcador
 
-
 const Mapa = () => {
     const [formMarcador, setFormMarcador] = useState<Partial<Marcador>>({});
     const [marcadores, setMarcadores] = useState<Marcador[]>([]);
     const [marcadorSelecionado, setMarcadorSelecionado] = useState<string | null>(null);
+    const [position, setPosition] = useState({
+        latitude: -31.308840,
+        longitude: -54.113702,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+    });
+    const [mostrarDetalhes, setMostrarDetalhes] = useState(false);
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -55,85 +62,76 @@ const Mapa = () => {
         limparFormulario();
     };
 
-    const [position, setPosition] = useState({
-        latitude: -31.308840,
-        longitude: -54.113702,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
-    });
-
-    const renderContent = () => {
-        if (marcadorSelecionado) {
-            return (
-                <DetalhesMarcador
-                    marcador={marcadores.find(m => m.id === marcadorSelecionado)}
-                />
-            );
-        }
-
-        return (
-            <MapView
-                style={MeuEstilo.map}
-                region={{
-                    latitude: position.latitude,
-                    longitude: position.longitude,
-                    latitudeDelta: position.latitudeDelta,
-                    longitudeDelta: position.longitudeDelta
-                }}
-                onPress={(e) => {
-                    setPosition({
-                        latitude: e.nativeEvent.coordinate.latitude,
-                        longitude: e.nativeEvent.coordinate.longitude,
-                        latitudeDelta: position.latitudeDelta,
-                        longitudeDelta: position.longitudeDelta
-                    });
-                    setFormMarcador({
-                        ...formMarcador,
-                        lat: e.nativeEvent.coordinate.latitude,
-                        long: e.nativeEvent.coordinate.longitude
-                    });
-                }}
-            >
-                {marcadores.map((marcador) => (
-                    <Marker
-                        key={marcador.id}
-                        coordinate={{ latitude: marcador.lat, longitude: marcador.long }}
-                        title={marcador.titulo}
-                        description={marcador.descricao}
-                        onPress={() => setMarcadorSelecionado(marcador.id)}
-                    />
-                ))}
-            </MapView>
-        );
-    };
-
     return (
         <View style={MeuEstilo.container}>
-            {renderContent()}
+            {mostrarDetalhes ? (
+                <DetalhesMarcador
+                    marcador={marcadores.find(m => m.id === marcadorSelecionado)}
+                    onVoltar={() => setMostrarDetalhes(false)}
+                />
+            ) : (
+                <>
+                    <MapView
+                        style={MeuEstilo.map}
+                        region={{
+                            latitude: position.latitude,
+                            longitude: position.longitude,
+                            latitudeDelta: position.latitudeDelta,
+                            longitudeDelta: position.longitudeDelta
+                        }}
+                        onPress={(e) => {
+                            setPosition({
+                                latitude: e.nativeEvent.coordinate.latitude,
+                                longitude: e.nativeEvent.coordinate.longitude,
+                                latitudeDelta: position.latitudeDelta,
+                                longitudeDelta: position.longitudeDelta
+                            });
+                            setFormMarcador({
+                                ...formMarcador,
+                                lat: e.nativeEvent.coordinate.latitude,
+                                long: e.nativeEvent.coordinate.longitude
+                            });
+                        }}
+                    >
+                        {marcadores.map((marcador) => (
+                            <Marker
+                                key={marcador.id}
+                                coordinate={{ latitude: marcador.lat, longitude: marcador.long }}
+                                title={marcador.titulo}
+                                description={marcador.descricao}
+                                onPress={() => {
+                                    setMarcadorSelecionado(marcador.id);
+                                    setMostrarDetalhes(true);
+                                }}
+                            />
+                        ))}
+                    </MapView>
 
-            <Text>Latitude : {position.latitude}</Text>
-            <Text>Longitude : {position.longitude}</Text>
-            <TextInput
-                placeholder="Title"
-                value={formMarcador.titulo || ''}
-                onChangeText={titulo => setFormMarcador({ ...formMarcador, titulo })}
-                style={MeuEstilo.input}
-            />
-            <TextInput
-                placeholder="Descricao"
-                value={formMarcador.descricao || ''}
-                onChangeText={descricao => setFormMarcador({ ...formMarcador, descricao })}
-                style={MeuEstilo.input}
-            />
-            <TouchableOpacity
-                onPress={salvar}
-                style={[meuestilo.button, meuestilo.buttonOutline]}
-            >
-                <Text style={meuestilo.buttonOutlineText}>Salvar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={cancelar} style={meuestilo.button}>
-                <Text style={meuestilo.buttonText}>Cancelar</Text>
-            </TouchableOpacity>
+                    <Text>Latitude : {position.latitude}</Text>
+                    <Text>Longitude : {position.longitude}</Text>
+                    <TextInput
+                        placeholder="Title"
+                        value={formMarcador.titulo || ''}
+                        onChangeText={titulo => setFormMarcador({ ...formMarcador, titulo })}
+                        style={MeuEstilo.input}
+                    />
+                    <TextInput
+                        placeholder="Descricao"
+                        value={formMarcador.descricao || ''}
+                        onChangeText={descricao => setFormMarcador({ ...formMarcador, descricao })}
+                        style={MeuEstilo.input}
+                    />
+                    <TouchableOpacity
+                        onPress={salvar}
+                        style={[meuestilo.button, meuestilo.buttonOutline]}
+                    >
+                        <Text style={meuestilo.buttonOutlineText}>Salvar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={cancelar} style={meuestilo.button}>
+                        <Text style={meuestilo.buttonText}>Cancelar</Text>
+                    </TouchableOpacity>
+                </>
+            )}
         </View>
     );
 };
